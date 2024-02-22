@@ -1,8 +1,8 @@
 package com.ale.udemyspring.dao
 
 import com.ale.udemyspring.entity.Category
-import jakarta.persistence.Id
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface CategoryDao: CrudRepository<Category, Id> {
+interface CategoryDao: JpaRepository<Category, Long> {
+    fun findByName(name: String?): Category?
 }
