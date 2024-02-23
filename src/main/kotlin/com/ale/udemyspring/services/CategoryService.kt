@@ -1,13 +1,12 @@
 package com.ale.udemyspring.services
 
 import com.ale.udemyspring.DuplicateCategoryException
+import com.ale.udemyspring.NotFoundCategoryException
 import com.ale.udemyspring.dao.CategoryDao
 import com.ale.udemyspring.entity.Category
-import jakarta.persistence.Id
 import jakarta.transaction.Transactional
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DuplicateKeyException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -37,9 +36,23 @@ class CategoryService {
     }
 
     @Transactional
-    fun saveCategory(category: Category) {
-        logger.info { "CategoryService - saveCategory" }
+    fun save(category: Category) {
+        logger.info { "CategoryService - save" }
         if (categoryDao.findByName(category.name) != null) throw DuplicateCategoryException("The category ${category.name} already exist")
         categoryDao.save(category)
     }
+    @Transactional
+    fun update(category: Category) {
+        logger.info { "CategoryService - update" }
+        if (categoryDao.findByIdOrNull(category.id) == null) throw NotFoundCategoryException("The category id ${category.id} don't exist")
+        categoryDao.save(category)
+    }
+
+    @Transactional
+    fun delete(id:Long) {
+        logger.info { "CategoryService - delete" }
+        val category = this.getById(id) ?: throw NotFoundCategoryException("The category id $id don't exist")
+        categoryDao.delete(category)
+    }
+
 }

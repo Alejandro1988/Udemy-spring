@@ -37,9 +37,22 @@ class CategoryController {
     }
 
     @PostMapping("/")
-    fun saveCategory(@RequestBody categoryDto: CategoryDto): ResponseEntity<Category> {
+    fun save(@RequestBody categoryDto: CategoryDto): ResponseEntity<Category> {
         val category = shapeShift.map<CategoryDto,Category>(categoryDto)
-        categoryService.saveCategory(category)
+        categoryService.save(category)
+        return ResponseEntity(HttpStatus.OK)
+    }
+    @PatchMapping("/{id}")
+    fun update(@PathVariable id: Long,@RequestBody categoryDto: CategoryDto): ResponseEntity<Category> {
+        val category = shapeShift.map<CategoryDto,Category>(categoryDto)
+        category.id = id
+        categoryService.update(category)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Long): ResponseEntity<Category> {
+        categoryService.delete(id)
         return ResponseEntity(HttpStatus.OK)
     }
 }
